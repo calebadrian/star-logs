@@ -8,13 +8,25 @@
         'near-death': target.health < 50 && target.health > 0,
         dead: target.health <= 0
       }">{{ target.health ? target.health : target.name + ' is in recovery now' }}</h1>
-      <h3>Current Modifier: {{target.currentMod.toFixed(2)}}</h3>
+      <h3>Current Modifier: <span v-for="item in target.activeItems">{{item.name}}, </span></h3>
       <div>
-        <button v-for="(damage, attackType) in target.attackTypes" @click="attack(attackType, target)" :disabled="target.health < damage">
+        <button v-for="(damage, attackType) in target.attackTypes" class="btn-danger" @click="attack(attackType, target)" :disabled="target.health < damage">
           {{attackType}}
         </button>
-        <button v-for="(damage, item) in target.items" @click="addMod(item, target)" :disabled="target.activeItems.includes(target.items[item])">{{item}}</button>
-        <button @click="reset(target)">reset</button>
+        <button v-for="(damage, item) in target.items" class="btn-info" @click="addMod(item, target)" :disabled="target.activeItems.includes(target.items[item])">{{item}}</button>
+        <button class="btn-warning" @click="reset(target)">reset</button>
+      </div>
+      <div>
+        <form @submit="">
+          <div v-for="(prop, key) in target" class="form-group">
+            <label :for="key">{{key}}</label>
+            <input :placeholder="prop"></input>
+          </div>
+          <div class="form-group">
+            <button class="btn-success" type="submit">Submit</button>
+            <button class="btn-danger" type="reset">Reset</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -40,9 +52,18 @@
             kick: 10
           },
           items: {
-            little: .1,
-            medium: .2,
-            big: .4
+            little: {
+              name: 'little',
+              damage: .1
+            },
+            medium: {
+              name: 'medium',
+              damage: .2
+            },
+            big: {
+              name: 'big',
+              damage: .4
+            }
           },
           activeItems: [],
           currentMod: 0
@@ -62,9 +83,18 @@
             kick: 8
           },
           items: {
-            little: .1,
-            medium: .2,
-            big: .4
+            little: {
+              name: 'little',
+              damage: .1
+            },
+            medium: {
+              name: 'medium',
+              damage: .2
+            },
+            big: {
+              name: 'big',
+              damage: .4
+            }
           },
           activeItems: [],
           currentMod: 0
@@ -74,14 +104,14 @@
     methods: {
       addMod(item, target){
         target.activeItems.push(target.items[item])
-        target.currentMod += target.items[item]
+        target.currentMod += target.items[item].damage
       },
       attack(attackType, target){
         var mod = 1
         var damage = target.attackTypes[attackType]
         if (damage){
           for (var i = 0; i < target.activeItems.length; i++){
-            mod -= target.activeItems[i]
+            mod -= target.activeItems[i].damage
           }
           target.health -= damage * mod
           target.health = target.health < 0 ? 0 : target.health
