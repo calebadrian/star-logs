@@ -46,20 +46,20 @@ router.post('/api/logs', (req, res, next) => {
         .catch(next)
 })
 
-router.put('/api/logs/:id', (req, res, next) => {
-    Logs.findByIdAndUpdate(req.params.id, req.body, {new: true})
-        .then(log => {
-            res.send(log)
-        })
-        .catch(next)
-})
+// router.put('/api/logs/:id', (req, res, next) => {
+//     Logs.findByIdAndUpdate(req.params.id, req.body, {new: true})
+//         .then(log => {
+//             res.send(log)
+//         })
+//         .catch(next)
+// })
 
-router.delete('/api/logs/:id', (req, res, next) => {
-    Logs.findByIdAndRemove(req.params.id)
-        .then(log => {
-            res.send({message: "Log go Burn"})
-        })
-        .catch(next)
-})
+// router.delete('/api/logs/:id', (req, res, next) => {
+//     Logs.findByIdAndRemove(req.params.id)
+//         .then(log => {
+//             res.send({message: "Log go Burn"})
+//         })
+//         .catch(next)
+// })
 
 module.exports = router
